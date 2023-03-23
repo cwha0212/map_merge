@@ -11,6 +11,7 @@ def resizing(pcd1_path, pcd2_path):
     pcd2 = o3d.io.read_point_cloud(pcd2_path)
     o3d.visualization.draw_geometries([pcd1,pcd2])
     # 첫 번째 point cloud의 중심 계산
+    o3d.visualization.draw_geometries([pcd1,pcd2])
     center1 = pcd1.get_center()
     # 두 번째 point cloud의 중심 계산
     center2 = pcd2.get_center()
@@ -25,18 +26,11 @@ def resizing(pcd1_path, pcd2_path):
 
     # 두 번째 point cloud를 scale 조정
     pcd2.scale(scale_factor, center2)
-
-    # ICP registration 수행
-    icp_result = o3d.pipelines.registration.registration_icp(
-        pcd1, pcd2, max_correspondence_distance=0.05
-    )
     o3d.visualization.draw_geometries([pcd1,pcd2])
-    # 결과 출력
-    print(icp_result.transformation)
     return center2, scale_factor, pcd1, pcd2
 
 def teaser_ICP(pcd1, pcd2):
-    VOXEL_SIZE = 0.05
+    VOXEL_SIZE = 0.5
     VISUALIZE = True
     pcd1.paint_uniform_color([0.0, 0.0, 1.0]) # show A_pcd in blue
     pcd2.paint_uniform_color([1.0, 0.0, 0.0]) # show B_pcd in red

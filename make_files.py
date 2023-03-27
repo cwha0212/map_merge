@@ -67,17 +67,21 @@ def make_files(path1, path2):
   use_pose1=0
   use_cloud1=0
 
-  pos1 = [115.799240649, 0.0988019208263, -53.1280452548]
-  ori1 = [0.997715530374, -0.0486142239289, 0.0467935843443, -0.00327691115417]
+  pos2 = [-4.43595063491, -0.00279395206118, 10.6099032687]
+  ori2 = [0.988707216604, -0.051082099908, -0.13970568904, 0.0181977153059]
 
-  pos2 = [-18.7435291201, -0.0646130773245, 5.1331403636]
-  ori2 = [0.753693414113, -0.00731763950082, 0.65664419868, -0.0266661961215]
+
+  pos1 = [-12.527839184, -0.159145776196, 19.2482162106]
+  ori1 = [0.876779300762, 0.0345348569708, 0.47872261186, -0.0298342941649]
 
   R = ConvQuatToMat(pos1, ori1)
   R_f = ConvQuatToMat(pos2, ori2)
-  Mat = np.dot(R ,np.linalg.inv(R_f))
+  Mat = np.dot(R_f ,np.linalg.inv(R))
   clouds_xyz = np.empty((0,3),float)
-
+  print(Mat)
+  print(R)
+  print(R_f)
+  print(np.dot(Mat,R))
   with open(path1+".txt", "r") as f:
     t = open(path1+"_chain.txt","w")
     e = open(path1+"_clouds.txt","w")
@@ -127,7 +131,7 @@ def make_files(path1, path2):
         e.write("\n")
 
         for j in range(measurements_num):
-          if int(cc[7+4*j]) == 77 or int(cc[7+4*j]) == 78 or int(cc[7+4*j]) == 79 or int(cc[7+4*j]) == 80 or int(cc[7+4*j]) == 81 or int(cc[7+4*j]) == 82 or int(cc[7+4*j]) == 83 or int(cc[7+4*j]) == 84 or int(cc[7+4*j]) == 85 or int(cc[7+4*j]) == 86 or int(cc[7+4*j]) == 87 or int(cc[7+4*j]) == 88 or int(cc[7+4*j]) == 89 or int(cc[7+4*j]) == 90 or int(cc[7+4*j]) == 91 or int(cc[7+4*j]) == 92 or int(cc[7+4*j]) == 93 or int(cc[7+4*j]) == 94:
+          if int(cc[7+4*j]) == 151 or int(cc[7+4*j]) == 152 or int(cc[7+4*j]) == 153 or int(cc[7+4*j]) == 154 or int(cc[7+4*j]) == 155 or int(cc[7+4*j]) == 156 or int(cc[7+4*j]) == 157 or int(cc[7+4*j]) == 158 or int(cc[7+4*j]) == 159 or int(cc[7+4*j]) == 160 or int(cc[7+4*j]) == 161 or int(cc[7+4*j]) == 162 or int(cc[7+4*j]) == 163 or int(cc[7+4*j]) == 164 or int(cc[7+4*j]) == 165 or int(cc[7+4*j]) == 166 or int(cc[7+4*j]) == 167 or int(cc[7+4*j]) == 168 or int(cc[7+4*j]) == 169 or int(cc[7+4*j]) == 170:
             for k in save_line[0:6]:
               t.write(str(k)+" ")
             t.write("\n")
@@ -164,7 +168,7 @@ def make_files(path1, path2):
         e.write("\n")
 
         for j in range(measurements_num):
-          if int(cc[7+4*j]) == 120 or int(cc[7+4*j]) == 121 or int(cc[7+4*j]) == 122 or int(cc[7+4*j]) == 123 or int(cc[7+4*j]) == 124 or int(cc[7+4*j]) == 125 or int(cc[7+4*j]) == 126 or int(cc[7+4*j]) == 127 or int(cc[7+4*j]) == 128 or int(cc[7+4*j]) == 129 or int(cc[7+4*j]) == 130 or int(cc[7+4*j]) == 131 or int(cc[7+4*j]) == 132 or int(cc[7+4*j]) == 133 or int(cc[7+4*j]) == 134 or int(cc[7+4*j]) == 135 or int(cc[7+4*j]) == 136 or int(cc[7+4*j]) == 137 or int(cc[7+4*j]) == 138 or int(cc[7+4*j]) == 139:
+          if int(cc[7+4*j]) == 126 or int(cc[7+4*j]) == 127 or int(cc[7+4*j]) == 128 or int(cc[7+4*j]) == 129 or int(cc[7+4*j]) == 130 or int(cc[7+4*j]) == 131 or int(cc[7+4*j]) == 132 or int(cc[7+4*j]) == 133 or int(cc[7+4*j]) == 134 or int(cc[7+4*j]) == 135 or int(cc[7+4*j]) == 136 or int(cc[7+4*j]) == 137 or int(cc[7+4*j]) == 138 or int(cc[7+4*j]) == 139 or int(cc[7+4*j]) == 140 or int(cc[7+4*j]) == 0 or int(cc[7+4*j]) == 1 or int(cc[7+4*j]) == 2 or int(cc[7+4*j]) == 3 or int(cc[7+4*j]) == 4 or int(cc[7+4*j]) == 5:
             save_line = cc[0:6]
             for k in save_line:
               t.write(str(k)+" ")

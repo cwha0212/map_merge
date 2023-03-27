@@ -71,6 +71,9 @@ with open(path2+"_clouds.txt", "r") as f:
       use_pose2 = int(aa[0])
     if i >= 4 and i<use_pose2+4:
       aa = line.split()
+      aa[6] = (float(aa[6])-center[0])*scale+center[0]
+      aa[7] = (float(aa[7])-center[1])*scale+center[1]
+      aa[8] = (float(aa[8])-center[2])*scale+center[2]
       save_line = aa
       save_line = np.array(save_line)
       save_line = np.expand_dims(save_line,axis=0)

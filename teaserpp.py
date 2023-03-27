@@ -10,27 +10,32 @@ def resizing(pcd1_path, pcd2_path):
     pcd1 = o3d.io.read_point_cloud(pcd1_path)
     pcd2 = o3d.io.read_point_cloud(pcd2_path)
     o3d.visualization.draw_geometries([pcd1,pcd2])
-    # 첫 번째 point cloud의 중심 계산
+    pcd1.estimate_normals()
+    pcd2.estimate_normals()
     o3d.visualization.draw_geometries([pcd1,pcd2])
+    pcd1, _ = pcd1.remove_statistical_outlier(nb_neighbors=20, std_ratio=2.0)
+    pcd2, _ = pcd2.remove_statistical_outlier(nb_neighbors=20, std_ratio=2.0)
+    o3d.visualization.draw_geometries([pcd1,pcd2])
+    # 첫 번째 point cloud의 중심 계산
     center1 = pcd1.get_center()
-    # 두 번째 point cloud의 중심 계산
+        # 두 번째 point cloud의 중심 계산
     center2 = pcd2.get_center()
-    # 첫 번째 point cloud에서 중심까지의 평균 거리 계산
+        # 첫 번째 point cloud에서 중심까지의 평균 거리 계산
     mean_distance1 = np.mean(np.linalg.norm(np.asarray(pcd1.points) - center1, axis=1))
 
-    # 두 번째 point cloud에서 중심까지의 평균 거리 계산
+        # 두 번째 point cloud에서 중심까지의 평균 거리 계산
     mean_distance2 = np.mean(np.linalg.norm(np.asarray(pcd2.points) - center2, axis=1))
 
-    # scale factor 계산
+        # scale factor 계산
     scale_factor = mean_distance1 / mean_distance2
 
-    # 두 번째 point cloud를 scale 조정
-    pcd2.scale(scale_factor, center2)
+        # 두 번째 point cloud를 scale 조정
+    pcd2 = pcd2.scale(scale_factor, center2)
     o3d.visualization.draw_geometries([pcd1,pcd2])
     return center2, scale_factor, pcd1, pcd2
 
 def teaser_ICP(pcd1, pcd2):
-    VOXEL_SIZE = 0.5
+    VOXEL_SIZE = 0.05
     VISUALIZE = True
     pcd1.paint_uniform_color([0.0, 0.0, 1.0]) # show A_pcd in blue
     pcd2.paint_uniform_color([1.0, 0.0, 0.0]) # show B_pcd in red

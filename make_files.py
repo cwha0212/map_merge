@@ -168,7 +168,7 @@ def make_files(path1, path2):
         e.write("\n")
 
         for j in range(measurements_num):
-          if int(cc[7+4*j]) == 126 or int(cc[7+4*j]) == 127 or int(cc[7+4*j]) == 128 or int(cc[7+4*j]) == 129 or int(cc[7+4*j]) == 130 or int(cc[7+4*j]) == 131 or int(cc[7+4*j]) == 132 or int(cc[7+4*j]) == 133 or int(cc[7+4*j]) == 134 or int(cc[7+4*j]) == 135 or int(cc[7+4*j]) == 136 or int(cc[7+4*j]) == 137 or int(cc[7+4*j]) == 138 or int(cc[7+4*j]) == 139 or int(cc[7+4*j]) == 140 or int(cc[7+4*j]) == 0 or int(cc[7+4*j]) == 1 or int(cc[7+4*j]) == 2 or int(cc[7+4*j]) == 3 or int(cc[7+4*j]) == 4 or int(cc[7+4*j]) == 5:
+          if int(cc[7+4*j]) == 126 or int(cc[7+4*j]) == 127 or int(cc[7+4*j]) == 128 or int(cc[7+4*j]) == 129 or int(cc[7+4*j]) == 130 or int(cc[7+4*j]) == 131 or int(cc[7+4*j]) == 132 or int(cc[7+4*j]) == 133 or int(cc[7+4*j]) == 134 or int(cc[7+4*j]) == 135 or int(cc[7+4*j]) == 136 or int(cc[7+4*j]) == 137 or int(cc[7+4*j]) == 138 or int(cc[7+4*j]) == 139 or int(cc[7+4*j]) == 0 or int(cc[7+4*j]) == 1 or int(cc[7+4*j]) == 2 or int(cc[7+4*j]) == 3 or int(cc[7+4*j]) == 4 or int(cc[7+4*j]) == 5:
             save_line = cc[0:6]
             for k in save_line:
               t.write(str(k)+" ")

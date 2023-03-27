@@ -32,34 +32,81 @@ def ConvQuatToMat(pos, ori):
   RotationMat = np.concatenate([RotationMat, a])
   return RotationMat
 
+def ConvMatToQuat(Mat):
+  tr = Mat[0][0] + Mat[1][1] + Mat[2][2]
+
+  if tr>0:
+    S = ((tr+1)**(0.5))*2
+    qw = 0.25 * S
+    qx = (Mat[2][1]-Mat[1][2])/S
+    qy = (Mat[0][2]-Mat[2][0])/S
+    qz = (Mat[1][0]-Mat[0][1])/S
+  elif Mat[0][0] > Mat[1][1] and Mat[0][0] > Mat[2][2]:
+    S = ((Mat[0][0]-Mat[1][1]-Mat[2][2]+1)**(0.5))*2
+    qw = (Mat[2][1]-Mat[1][2])/S
+    qx = 0.25 * S
+    qy = (Mat[0][1]+Mat[1][0])/S
+    qz = (Mat[0][2]+Mat[2][0])/S
+  elif Mat[1][1] > Mat[2][2]:
+    S = ((Mat[1][1]-Mat[0][0]-Mat[2][2])**(0.5))*2
+    qw = (Mat[0][2]-Mat[2][0])/S
+    qx = (Mat[0][1]+Mat[1][0])/S
+    qy = 0.25 * S
+    qz = (Mat[1][2]+Mat[2][1])/S
+  else:
+    S = ((Mat[2][2]-Mat[0][0]-Mat[1][1])**(0.5))*2
+    qw = (Mat[1][0]-Mat[0][1])/S
+    qx = (Mat[0][2]+Mat[2][0])/S
+    qy = (Mat[1][2]+Mat[2][1])/S
+    qz = 0.25 * S
+  quat = [qw,qx,qy,qz,Mat[0][3],Mat[1][3],Mat[2][3]]
+  return quat
+
 def make_files(path1, path2):
   i=0
-  use_pose=0
-  use_cloud=0
-  pos1 = [-18.7435291201, -0.0646130773245, 5.1331403636]
-  ori1 = [0.753693414113, -0.00731763950082, 0.65664419868, -0.0266661961215]
+  use_pose1=0
+  use_cloud1=0
 
-  pos2 = [115.799240649, 0.0988019208263, -53.1280452548]
-  ori2 = [0.997715530374, -0.0486142239289, 0.0467935843443, -0.00327691115417 ]
+  pos1 = [115.799240649, 0.0988019208263, -53.1280452548]
+  ori1 = [0.997715530374, -0.0486142239289, 0.0467935843443, -0.00327691115417]
 
-  R = ConvQuatToMat(pos2, ori1)
-  R_f = ConvQuatToMat(pos1, ori2)
+  pos2 = [-18.7435291201, -0.0646130773245, 5.1331403636]
+  ori2 = [0.753693414113, -0.00731763950082, 0.65664419868, -0.0266661961215]
+
+  R = ConvQuatToMat(pos1, ori1)
+  R_f = ConvQuatToMat(pos2, ori2)
   Mat = np.dot(R ,np.linalg.inv(R_f))
   clouds_xyz = np.empty((0,3),float)
 
   with open(path1+".txt", "r") as f:
     t = open(path1+"_chain.txt","w")
     e = open(path1+"_clouds.txt","w")
+    e.write("NVM_V3\n")
+    e.write("\n")
     lines = f.readlines()
     for line in lines:
       i = i+1
       if i == 3:
         aa = line.split()
-        use_pose = int(aa[0])
-      if i == use_pose + 5:
+        use_pose1 = int(aa[0])
+        e.write(str(use_pose1)+"\n")
+      if i >= 4 and i<use_pose1+4:
+        aa = line.split()
+        ori = [float(aa[2]),float(aa[3]),float(aa[4]),float(aa[5])]
+        pos = [float(aa[6]),float(aa[7]),float(aa[8])]
+        pose = ConvQuatToMat(pos, ori)
+        pose = np.dot(Mat,pose)
+        pose = ConvMatToQuat(pose)
+        saveline=aa[0:2] + pose + aa[9:]
+        for o in saveline:
+          e.write(str(o)+" ")
+        e.write("\n")
+      if i == use_pose1 + 5:
+        e.write("\n")
         bb = line.split()
-        use_cloud = int(bb[0])
-      if i >= use_pose + 6 and i <= use_cloud + use_pose + 5:
+        use_cloud1 = int(bb[0])
+        e.write(str(use_cloud1)+"\n")
+      if i >= use_pose1 + 6 and i <= use_cloud1 + use_pose1 + 5:
         cc = line.split()
         x = float(cc[0])
         y = float(cc[1])
@@ -71,10 +118,10 @@ def make_files(path1, path2):
         a = 255
 
         clouds_xyz = np.array([[x, y, z, 1]])
-        clouds_xyz = np.dot(Mat, clouds_xyz.T)
+        clouds_xyz = np.dot(np.linalg.inv(Mat), clouds_xyz.T)
         clouds_xyz = np.delete(clouds_xyz.T, 3, axis = 1)
         save_line = np.append(np.squeeze(clouds_xyz),cc[3:])
-
+      
         for k in save_line:
           e.write(str(k)+" ")
         e.write("\n")
@@ -88,21 +135,27 @@ def make_files(path1, path2):
     t.close()
 
   i=0
-  use_pose=0
-  use_cloud=0
+  use_pose2=0
+  use_cloud2=0
   with open(path2+".txt", "r") as f:
     t = open(path2+"_chain.txt","w")
     e = open(path2+"_clouds.txt","w")
+    e.write("NVM_V3\n")
+    e.write("\n")
     lines = f.readlines()
     for line in lines:
       i = i+1
       if i == 3:
         aa = line.split()
-        use_pose = int(aa[0])
-      if i == use_pose + 5:
+        use_pose2 = int(aa[0])
+        e.write(str(use_pose2)+"\n")
+      if i >= 4 and i<use_pose2+5:
+        e.write(line)
+      if i == use_pose2 + 5:
         bb = line.split()
-        use_cloud = int(bb[0])
-      if i >= use_pose + 6 and i <= use_cloud + use_pose + 5:
+        use_cloud2 = int(bb[0])
+        e.write(str(use_cloud2)+"\n")
+      if i >= use_pose2 + 6 and i <= use_cloud2 + use_pose2 + 5:
         cc = line.split()
         measurements_num = int(cc[6])
 
@@ -118,6 +171,7 @@ def make_files(path1, path2):
             t.write("\n")
             break
     t.close()
+    print(use_cloud1,use_cloud2)
 
   pcd1 = o3d.io.read_point_cloud(path1+"_chain.txt", format="xyz")
   pcd2 = o3d.io.read_point_cloud(path2+"_chain.txt", format="xyz")

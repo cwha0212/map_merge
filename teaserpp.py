@@ -27,15 +27,15 @@ def resizing(pcd1_path, pcd2_path):
     mean_distance2 = np.mean(np.linalg.norm(np.asarray(pcd2.points) - center2, axis=1))
 
         # scale factor 계산
-    scale_factor = mean_distance1 / mean_distance2
+    scale_factor = mean_distance2 / mean_distance1
 
         # 두 번째 point cloud를 scale 조정
-    pcd2 = pcd2.scale(scale_factor, center2)
+    pcd1 = pcd1.scale(scale_factor, center1)
     o3d.visualization.draw_geometries([pcd1,pcd2])
-    return center2, scale_factor, pcd1, pcd2
+    return center1, scale_factor, pcd1, pcd2
 
 def teaser_ICP(pcd1, pcd2):
-    VOXEL_SIZE = 0.05
+    VOXEL_SIZE = 0.5
     VISUALIZE = True
     pcd1.paint_uniform_color([0.0, 0.0, 1.0]) # show A_pcd in blue
     pcd2.paint_uniform_color([1.0, 0.0, 0.0]) # show B_pcd in red

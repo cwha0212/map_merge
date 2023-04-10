@@ -67,12 +67,11 @@ def make_files(path1, path2):
   use_pose1=0
   use_cloud1=0
 
-  pos2 = [-4.43595063491, -0.00279395206118, 10.6099032687]
-  ori2 = [0.988707216604, -0.051082099908, -0.13970568904, 0.0181977153059]
+  pos1 = [18.1301930828, 3.89046660859e-026, -14.6287624864]
+  ori1 = [0.9219677706, 0.0112649160235, -0.386607342745, -0.0195771927977]
 
-
-  pos1 = [-12.527839184, -0.159145776196, 19.2482162106]
-  ori1 = [0.876779300762, 0.0345348569708, 0.47872261186, -0.0298342941649]
+  pos2 = [-2.08976760253, 0.655534793315, -0.336082516909]
+  ori2 = [0.923614945099, -0.0114040114721, 0.375851129289, 0.0744487575521]
 
   R = ConvQuatToMat(pos1, ori1)
   R_f = ConvQuatToMat(pos2, ori2)
@@ -130,12 +129,14 @@ def make_files(path1, path2):
           e.write(str(k)+" ")
         e.write("\n")
 
+        chain_list = [140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159]
+        index = []
         for j in range(measurements_num):
-          if int(cc[7+4*j]) == 151 or int(cc[7+4*j]) == 152 or int(cc[7+4*j]) == 153 or int(cc[7+4*j]) == 154 or int(cc[7+4*j]) == 155 or int(cc[7+4*j]) == 156 or int(cc[7+4*j]) == 157 or int(cc[7+4*j]) == 158 or int(cc[7+4*j]) == 159 or int(cc[7+4*j]) == 160 or int(cc[7+4*j]) == 161 or int(cc[7+4*j]) == 162 or int(cc[7+4*j]) == 163 or int(cc[7+4*j]) == 164 or int(cc[7+4*j]) == 165 or int(cc[7+4*j]) == 166 or int(cc[7+4*j]) == 167 or int(cc[7+4*j]) == 168 or int(cc[7+4*j]) == 169 or int(cc[7+4*j]) == 170:
-            for k in save_line[0:6]:
-              t.write(str(k)+" ")
-            t.write("\n")
-            break
+          index.append(int(cc[7+4*j]))
+        if len(set(index) & set(chain_list)) >=8:
+          for k in save_line[0:6]:
+            t.write(str(k)+" ")
+          t.write("\n")
     t.close()
 
   i=0
@@ -167,13 +168,16 @@ def make_files(path1, path2):
           e.write(str(k)+" ")
         e.write("\n")
 
+        chain_list = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+        index = []
         for j in range(measurements_num):
-          if int(cc[7+4*j]) == 126 or int(cc[7+4*j]) == 127 or int(cc[7+4*j]) == 128 or int(cc[7+4*j]) == 129 or int(cc[7+4*j]) == 130 or int(cc[7+4*j]) == 131 or int(cc[7+4*j]) == 132 or int(cc[7+4*j]) == 133 or int(cc[7+4*j]) == 134 or int(cc[7+4*j]) == 135 or int(cc[7+4*j]) == 136 or int(cc[7+4*j]) == 137 or int(cc[7+4*j]) == 138 or int(cc[7+4*j]) == 139 or int(cc[7+4*j]) == 0 or int(cc[7+4*j]) == 1 or int(cc[7+4*j]) == 2 or int(cc[7+4*j]) == 3 or int(cc[7+4*j]) == 4 or int(cc[7+4*j]) == 5:
-            save_line = cc[0:6]
-            for k in save_line:
-              t.write(str(k)+" ")
-            t.write("\n")
-            break
+          index.append(int(cc[7+4*j]))
+        if len(set(index) & set(chain_list)) >=8:
+          save_line = cc[0:6]
+          for k in save_line[0:6]:
+            t.write(str(k)+" ")
+          t.write("\n")
+
     t.close()
     print(use_cloud1,use_cloud2)
 

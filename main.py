@@ -2,8 +2,8 @@ from make_files import *
 from teaserpp import *
 import numpy as np
 
-path1 = "/home/chang/map_merge/fact_6/6eng"
-path2 = "/home/chang/map_merge/fact_6/engfactory"
+path1 = "/home/chang/map_merge/3_1/1eng"
+path2 = "/home/chang/map_merge/3_1/3eng_result"
 
 make_files(path1,path2)
 center, scale, pcd1, pcd2 = resizing(path1+"_pcd.ply",path2+"_pcd.ply")
@@ -30,9 +30,6 @@ with open(path1+"_clouds.txt", "r") as f:
       e.write("\n")
     if i >= 4 and i<use_pose1+4:
       aa = line.split()
-      aa[6] = (float(aa[6])-center[0])*scale+center[0]
-      aa[7] = (float(aa[7])-center[1])*scale+center[1]
-      aa[8] = (float(aa[8])-center[2])*scale+center[2]
       ori = [float(aa[2]),float(aa[3]),float(aa[4]),float(aa[5])]
       pos = [float(aa[6]),float(aa[7]),float(aa[8])]
       pose = ConvQuatToMat(pos, ori)

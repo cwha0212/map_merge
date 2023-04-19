@@ -67,20 +67,27 @@ def make_files(path1, path2):
   use_pose1=0
   use_cloud1=0
 
-  pos1 = [18.1301930828, 3.89046660859e-026, -14.6287624864]
-  ori1 = [0.9219677706, 0.0112649160235, -0.386607342745, -0.0195771927977]
+  pos1 = [17.7915624527, 0.0126495886612, -22.8878133008]
+  ori1 = [0.965178804222, 0.0343268747293, -0.257826307259, -0.0278744270706]
 
-  pos2 = [-2.08976760253, 0.655534793315, -0.336082516909]
-  ori2 = [0.923614945099, -0.0114040114721, 0.375851129289, 0.0744487575521]
+  pos2 = [1.64790610712, -0.000838888780825, -1.78114666677]
+  ori2 = [0.956475506058, 0.0302603081209, -0.288796613046, -0.0289122478224]
 
   R = ConvQuatToMat(pos1, ori1)
   R_f = ConvQuatToMat(pos2, ori2)
   Mat = np.dot(R_f ,np.linalg.inv(R))
   clouds_xyz = np.empty((0,3),float)
+
+  pre_mat = np.array(
+[[-6.29405290e-01,  4.79770718e-02,  7.75591459e-01,  2.14095856e+02],
+ [ 5.41095969e-02,  9.98373522e-01, -1.78472936e-02, -2.92388480e+01],
+ [-7.75187699e-01,  3.07341028e-02, -6.30978831e-01, -2.91541133e+02],
+ [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,  1.00000000e+00]]
+  )
+
   print(Mat)
-  print(R)
-  print(R_f)
-  print(np.dot(Mat,R))
+  print(np.linalg.inv(Mat))
+
   with open(path1+".txt", "r") as f:
     t = open(path1+"_chain.txt","w")
     e = open(path1+"_clouds.txt","w")
@@ -121,7 +128,10 @@ def make_files(path1, path2):
         a = 255
 
         clouds_xyz = np.array([[x, y, z, 1]])
-        clouds_xyz = np.dot(np.linalg.inv(Mat), clouds_xyz.T)
+
+        clouds_xyz = np.dot(pre_mat, clouds_xyz.T)
+
+        clouds_xyz = np.dot(np.linalg.inv(Mat), clouds_xyz)
         clouds_xyz = np.delete(clouds_xyz.T, 3, axis = 1)
         save_line = np.append(np.squeeze(clouds_xyz),cc[3:])
       
@@ -129,7 +139,7 @@ def make_files(path1, path2):
           e.write(str(k)+" ")
         e.write("\n")
 
-        chain_list = [140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159]
+        chain_list = [159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178]
         index = []
         for j in range(measurements_num):
           index.append(int(cc[7+4*j]))
@@ -168,7 +178,7 @@ def make_files(path1, path2):
           e.write(str(k)+" ")
         e.write("\n")
 
-        chain_list = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+        chain_list = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,115]
         index = []
         for j in range(measurements_num):
           index.append(int(cc[7+4*j]))

@@ -26,12 +26,10 @@ def resizing(pcd1_path, pcd2_path):
         # 두 번째 point cloud에서 중심까지의 평균 거리 계산
     mean_distance2 = np.mean(np.linalg.norm(np.asarray(pcd2.points) - center2, axis=1))
 
-        # scale factor 계산
+    # scale factor 계산
     scale_factor = mean_distance2 / mean_distance1
     print(center1)
     print(scale_factor)
-        # 두 번째 point cloud를 scale 조정
-    pcd1 = pcd1.scale(scale_factor, center1)
     o3d.visualization.draw_geometries([pcd1,pcd2])
     return center1, scale_factor, pcd1, pcd2
 
@@ -92,10 +90,10 @@ def teaser_ICP(pcd1, pcd2):
     o3d.visualization.draw_geometries([A_pcd_T_teaser,B_pcd])
 
     # local refinement using ICP
-    icp_sol = o3d.pipelines.registration.registration_icp(
+    icp_sol = o3d.registration.registration_icp(
         A_pcd, B_pcd, NOISE_BOUND, T_teaser,
-        o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-        o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=100))
+        o3d.registration.TransformationEstimationPointToPoint(),
+        o3d.registration.ICPConvergenceCriteria(max_iteration=100))
     T_icp = icp_sol.transformation
     print(T_icp)
     # visualize the registration after ICP refinement

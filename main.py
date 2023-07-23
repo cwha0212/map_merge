@@ -2,8 +2,8 @@ from make_files import *
 from teaserpp import *
 import numpy as np
 
-path1 = "/home/chang/map_merge/3_1/1eng"
-path2 = "/home/chang/map_merge/3_1/3eng_result"
+path1 = "/home/chang/map_merge/7_fact/7eng"
+path2 = "/home/chang/map_merge/7_fact/engfactory"
 
 make_files(path1,path2)
 center, scale, pcd1, pcd2 = resizing(path1+"_pcd.ply",path2+"_pcd.ply")

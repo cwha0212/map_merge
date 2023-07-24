@@ -11,7 +11,7 @@ b = open(path2,"r")
 pcd1 = o3d.io.read_point_cloud(path1, format="xyzrgb")
 pcd2 = o3d.io.read_point_cloud(path2, format="xyzrgb")
 
-VOXEL_SIZE = 0.05
+VOXEL_SIZE = 1
 VISUALIZE = True
 
 # Load and visualize two point clouds from 3DMatch dataset

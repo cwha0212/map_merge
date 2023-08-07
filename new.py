@@ -2,8 +2,11 @@ import open3d as o3d
 from helpers import *
 import copy
 
-path1 = "/home/chang/map_merge/orb/result1.txt"
-path2 = "/home/chang/map_merge/orb/result2.txt"
+path1 = "/home/chang/map_merge/Mapping_result/polygon/map11_merge.txt"
+path2 = "/home/chang/map_merge/Mapping_result/polygon/merge_map11.txt"
+
+# path1 = "/home/chang/map_merge/Mapping_result/map3_c.txt"
+# path2 = "/home/chang/map_merge/Mapping_result/transformed/map2_transformed.txt"
 
 a = open(path1,"r")
 b = open(path2,"r")
@@ -11,7 +14,7 @@ b = open(path2,"r")
 pcd1 = o3d.io.read_point_cloud(path1, format="xyzrgb")
 pcd2 = o3d.io.read_point_cloud(path2, format="xyzrgb")
 
-VOXEL_SIZE = 1
+VOXEL_SIZE = 2.4
 VISUALIZE = True
 
 # Load and visualize two point clouds from 3DMatch dataset
@@ -70,13 +73,22 @@ T_teaser = Rt2T(R_teaser,t_teaser)
 A_pcd_T_teaser = copy.deepcopy(A_pcd).transform(T_teaser)
 o3d.visualization.draw_geometries([A_pcd_T_teaser,B_pcd])
 
-# local refinement using ICP
-icp_sol = o3d.registration.registration_icp(
-      A_pcd, B_pcd, NOISE_BOUND, T_teaser,
-      o3d.registration.TransformationEstimationPointToPoint(),
-      o3d.registration.ICPConvergenceCriteria(max_iteration=100))
-T_icp = icp_sol.transformation
-print(T_icp)
-# visualize the registration after ICP refinement
-A_pcd_T_icp = copy.deepcopy(A_pcd).transform(T_icp)
-o3d.visualization.draw_geometries([A_pcd_T_icp,B_pcd])
+mat = np.array(T_teaser)
+t = open("/home/chang/map_merge/Mapping_result/transformed/map11_transformed.txt", "w")
+
+with open("/home/chang/map_merge/Mapping_result/map11_c.txt", "r") as f:
+  lines = f.readlines()
+  for line in lines:
+    word = line.split()
+    x = float(word[0])
+    y = float(word[1])
+    z = float(word[2])
+    clouds_xyz = np.array([[x,y,z,1]])
+
+    clouds_xyz = np.dot(mat, clouds_xyz.T)
+    clouds_xyz = np.delete(clouds_xyz.T, 3, axis = 1)
+    save_line = np.append(np.squeeze(clouds_xyz),word[3:])
+
+    for i in save_line:
+      t.write(str(i)+" ")
+    t.write("\n")

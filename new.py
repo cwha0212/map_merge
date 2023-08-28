@@ -2,8 +2,8 @@ import open3d as o3d
 from helpers import *
 import copy
 
-path1 = "/home/chang/map_merge/new/polygon/map8_merge.txt"
-path2 = "/home/chang/map_merge/new/polygon/merge_map8.txt"
+path1 = "/home/chang/map_merge/new/polygon/map5_map3.txt"
+path2 = "/home/chang/map_merge/new/polygon/map3_map5.txt"
 
 # path1 = "/home/chang/map_merge/Mapping_result/map3_c.txt"
 # path2 = "/home/chang/map_merge/Mapping_result/transformed/map2_transformed.txt"
@@ -14,7 +14,7 @@ b = open(path2,"r")
 pcd1 = o3d.io.read_point_cloud(path1, format="xyzrgb")
 pcd2 = o3d.io.read_point_cloud(path2, format="xyzrgb")
 
-VOXEL_SIZE = 1.8
+VOXEL_SIZE = 2
 VISUALIZE = True
 
 # Load and visualize two point clouds from 3DMatch dataset
@@ -74,6 +74,7 @@ A_pcd_T_teaser = copy.deepcopy(A_pcd).transform(T_teaser)
 o3d.visualization.draw_geometries([A_pcd_T_teaser,B_pcd])
 
 mat = np.array(T_teaser)
+print(mat)
 # t = open("/home/chang/map_merge/Mapping_result/new_transformed/map8_transformed.txt", "w")
 
 # with open("/home/chang/map_merge/Mapping_result/map8_c.txt", "r") as f:
@@ -93,9 +94,9 @@ mat = np.array(T_teaser)
 #       t.write(str(i)+" ")
 #     t.write("\n")
 
-t = open("/home/chang/map_merge/new/t/map8_t.txt", "w")
+t = open("/home/chang/map_merge/new/t/map5_t2.txt", "w")
 
-with open("/home/chang/map_merge/new/map8_c.txt", "r") as f:
+with open("/home/chang/map_merge/new/t/map5_t.txt", "r") as f:
   lines = f.readlines()
   for line in lines:
     word = line.split()

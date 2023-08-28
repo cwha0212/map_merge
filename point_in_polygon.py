@@ -15,10 +15,10 @@ def inside_or_outside(polygon, point):
         res = True
     return res
 
-polygon = [[-89.63, -0.938, 16.8687], [-113.748, -17.7684, -17.3423], [-11.1496, -29.8788, -71.096], [4.15818, -10.0477, -29.4245], [-89.63, -0.938, 16.8687]]
+polygon = [[-277.833, 11.111, 232.748], [-205.401, 23.493, 223.014], [-103.02, 5.58769, 176.49], [-145.78, -24.2825, 73.7796], [-266.708, 17.1183, 59.0546], [-277.833, 11.111, 232.748]]
 
-t = open("/home/chang/map_merge/new/polygon/map8_merge.txt","w")
-with open("/home/chang/map_merge/new/map8_c.txt", "r") as f:
+t = open("/home/chang/map_merge/new/polygon/map3_map5.txt","w")
+with open("/home/chang/map_merge/new/t/map3_t.txt", "r") as f:
     lines = f.readlines()
     for i, line in enumerate(lines):
         cc = line.split()
@@ -31,10 +31,10 @@ with open("/home/chang/map_merge/new/map8_c.txt", "r") as f:
         if inside_or_outside(polygon, [x,y,z]) :
             t.write(str(x) + " " + str(y) + " " + str(z) + " " + str(r) + " " + str(g) + " " + str(b) + "\n")
 
-polygon = [[-598.694, 101.543, 285.524], [-609.457, 107.057, 211.526], [-503.815, 88.7533, 204.155], [-503.81, 92.908, 255.193], [-598.694, 101.543, 285.524]]
+polygon = [[-277.833, 11.111, 232.748], [-205.401, 23.493, 223.014], [-103.02, 5.58769, 176.49], [-145.78, -24.2825, 73.7796], [-266.708, 17.1183, 59.0546], [-277.833, 11.111, 232.748]]
 
-t = open("/home/chang/map_merge/new/polygon/merge_map8.txt","w")
-with open("/home/chang/map_merge/new/t/merge.txt", "r") as f:
+t = open("/home/chang/map_merge/new/polygon/map5_map3.txt","w")
+with open("/home/chang/map_merge/new/t/map5_t.txt", "r") as f:
     lines = f.readlines()
     for i, line in enumerate(lines):
         cc = line.split()

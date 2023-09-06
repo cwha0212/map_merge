@@ -2,8 +2,8 @@ import open3d as o3d
 from helpers import *
 import copy
 
-path1 = "/home/chang/map_merge/newnew/polygon/map4_merge.txt"
-path2 = "/home/chang/map_merge/newnew/polygon/merge_map4.txt"
+path1 = "/home/chang/map_merge/newnew/polygon/map8_merge.txt"
+path2 = "/home/chang/map_merge/newnew/polygon/merge_map8.txt"
 
 # path1 = "/home/chang/map_merge/Mapping_result/map3_c.txt"
 # path2 = "/home/chang/map_merge/Mapping_result/transformed/map2_transformed.txt"
@@ -14,7 +14,7 @@ b = open(path2,"r")
 pcd1 = o3d.io.read_point_cloud(path1, format="xyzrgb")
 pcd2 = o3d.io.read_point_cloud(path2, format="xyzrgb")
 
-VOXEL_SIZE = 2.9
+VOXEL_SIZE = 1.8
 VISUALIZE = True
 
 # Load and visualize two point clouds from 3DMatch dataset
@@ -23,7 +23,8 @@ B_pcd_raw = pcd2
 A_pcd_raw.paint_uniform_color([0.0, 0.0, 1.0]) # show A_pcd in blue
 B_pcd_raw.paint_uniform_color([1.0, 0.0, 0.0]) # show B_pcd in red
 if VISUALIZE:
-    o3d.visualization.draw_geometries([A_pcd_raw,B_pcd_raw]) # plot A and B 
+    o3d.visualization.draw_geometries([A_pcd_raw]) # plot A and B 
+    o3d.visualization.draw_geometries([B_pcd_raw])
 
 # voxel downsample both clouds
 A_pcd = A_pcd_raw.voxel_down_sample(voxel_size=VOXEL_SIZE)
@@ -73,8 +74,19 @@ T_teaser = Rt2T(R_teaser,t_teaser)
 A_pcd_T_teaser = copy.deepcopy(A_pcd).transform(T_teaser)
 o3d.visualization.draw_geometries([A_pcd_T_teaser,B_pcd])
 
-mat = np.array(T_teaser)
-print(mat)
+# local refinement using ICP
+icp_sol = o3d.registration.registration_icp(
+    A_pcd, B_pcd, NOISE_BOUND, T_teaser,
+    o3d.registration.TransformationEstimationPointToPoint(),
+    o3d.registration.ICPConvergenceCriteria(max_iteration=100))
+T_icp = icp_sol.transformation
+print(T_icp)
+# visualize the registration after ICP refinement
+A_pcd_T_icp = copy.deepcopy(A_pcd).transform(T_icp)
+o3d.visualization.draw_geometries([A_pcd_T_icp,B_pcd])
+
+Mat = T_icp
+
 # t = open("/home/chang/map_merge/Mapping_result/new_transformed/map8_transformed.txt", "w")
 
 # with open("/home/chang/map_merge/Mapping_result/map8_c.txt", "r") as f:
@@ -94,9 +106,9 @@ print(mat)
 #       t.write(str(i)+" ")
 #     t.write("\n")
 
-t = open("/home/chang/map_merge/newnew/t/map4_t.txt", "w")
+t = open("/home/chang/map_merge/newnew/t/map8_t.txt", "w")
 
-with open("/home/chang/map_merge/newnew/map4_c.txt", "r") as f:
+with open("/home/chang/map_merge/newnew/map8_c.txt", "r") as f:
   lines = f.readlines()
   for line in lines:
     word = line.split()
@@ -105,7 +117,7 @@ with open("/home/chang/map_merge/newnew/map4_c.txt", "r") as f:
     z = float(word[2])
     clouds_xyz = np.array([[x,y,z,1]])
 
-    clouds_xyz = np.dot(mat, clouds_xyz.T)
+    clouds_xyz = np.dot(Mat, clouds_xyz.T)
     clouds_xyz = np.delete(clouds_xyz.T, 3, axis = 1)
     save_line = np.append(np.squeeze(clouds_xyz),word[3:])
 

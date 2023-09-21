@@ -13,7 +13,6 @@ b = open(path2,"r")
 
 pcd1 = o3d.io.read_point_cloud(path1, format="xyzrgb")
 pcd2 = o3d.io.read_point_cloud(path2, format="xyzrgb")
-
 VOXEL_SIZE = 1.8
 VISUALIZE = True
 
@@ -22,7 +21,11 @@ A_pcd_raw = pcd1
 B_pcd_raw = pcd2
 A_pcd_raw.paint_uniform_color([0.0, 0.0, 1.0]) # show A_pcd in blue
 B_pcd_raw.paint_uniform_color([1.0, 0.0, 0.0]) # show B_pcd in red
+o3d.visualization.draw_geometries([A_pcd_raw,B_pcd_raw])
+A_pcd_raw.estimate_normals()
+B_pcd_raw.estimate_normals()
 if VISUALIZE:
+    o3d.visualization.draw_geometries([A_pcd_raw,B_pcd_raw])
     o3d.visualization.draw_geometries([A_pcd_raw]) # plot A and B 
     o3d.visualization.draw_geometries([B_pcd_raw])
 
@@ -106,21 +109,21 @@ Mat = T_icp
 #       t.write(str(i)+" ")
 #     t.write("\n")
 
-t = open("/home/chang/map_merge/newnew/t/map8_t.txt", "w")
+# t = open("/home/chang/map_merge/newnew/t/map8_t.txt", "w")
 
-with open("/home/chang/map_merge/newnew/map8_c.txt", "r") as f:
-  lines = f.readlines()
-  for line in lines:
-    word = line.split()
-    x = float(word[0])
-    y = float(word[1])
-    z = float(word[2])
-    clouds_xyz = np.array([[x,y,z,1]])
+# with open("/home/chang/map_merge/newnew/map8_c.txt", "r") as f:
+#   lines = f.readlines()
+#   for line in lines:
+#     word = line.split()
+#     x = float(word[0])
+#     y = float(word[1])
+#     z = float(word[2])
+#     clouds_xyz = np.array([[x,y,z,1]])
 
-    clouds_xyz = np.dot(Mat, clouds_xyz.T)
-    clouds_xyz = np.delete(clouds_xyz.T, 3, axis = 1)
-    save_line = np.append(np.squeeze(clouds_xyz),word[3:])
+#     clouds_xyz = np.dot(Mat, clouds_xyz.T)
+#     clouds_xyz = np.delete(clouds_xyz.T, 3, axis = 1)
+#     save_line = np.append(np.squeeze(clouds_xyz),word[3:])
 
-    for i in save_line:
-      t.write(str(i)+" ")
-    t.write("\n")
+#     for i in save_line:
+#       t.write(str(i)+" ")
+#     t.write("\n")
